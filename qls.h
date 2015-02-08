@@ -1,7 +1,2 @@
-/*a pair of a character and how often it appears*/
-typedef struct letterCount {
-	char c;
-	int count;
-} letterCount;
-
-
+/*returns how often desiredChar appears in the input file*/
+int getCount(int desiredChar);

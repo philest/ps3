@@ -1,27 +1,37 @@
-letterCount ** makeLetterCountArr(size_t numRows);
+#include "lc.h"
 
-/*allocates space for an array of pointers to letterCount structs*/
-leterCount **
-makeLetterCountArr(size_t numRows) 
+letterCount **
+makeLetterCount2D(int numRows)
 {
-	letterCount ** p;
-	int i;
+	letterCount **p;
+	p = malloc(sizeof(letterCount *) * (numRows + 1)) /*space for sentinel*/ 
+	assert( p != 0 );
 
-	p = malloc(sizeof(letterCount *) * (numRows + 1)); /*sentinel value space*/
-	assert(p != 0);
-
-
-	/*space for each letterCount struct*/
-	for(i = 0; i < numRows; i++)
-	{
-		p[i] = malloc(sizeof(letterCount));
-		assert(p[i] != 0);
-	}
-
-	p[numRows] = 0; /*initialze sentinel value*/
+	p[numRows] = 0; /*intialize sentinel*/
 
 	return p;
 }
 
 
+
+letterCount *
+makeLetterCountArr(int numRows)
+{
+	letterCount *lcp; 
+
+	lcp = malloc(sizeof(letterCount) * (numRows + 1)); /*one more space for sentinel value*/
+	assert(lcp != 0);
+
+	lcp[numRows] = 0; /*sentinel value*/
+
+	return lcp
+}
+
+void
+initLetterCount(letterCount *lcp, int c, int count)
+{
+	lcp->c = c;
+	lcp->count = count;
+
+}
 

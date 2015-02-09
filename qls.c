@@ -1,45 +1,118 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h> 
+#include <assert.h>
 #include "qls.h"
 #include "lc.h"
 
 
 
-int getCount(int desiredChar)
+int *
+getLocations(int desiredChar)
 {
 	int count = 0;
 	int c = 0;
+	int numHits = 0;
+	int size = 1;
+	int *a;
 
-	while( (getchar() = c) != EOF )
+	a = malloc(sizeof(int) * size);
+	assert( a != 0);
+
+
+	while( (c = getchar()) != EOF )
 	{
+
+
+
 		if (c == desiredChar)
+		{
+			while(numHits >= size) /*increase array size*/
+			{
+				size *= 2;
+				a = realloc(a, sizeof(int) * size);
+				assert( a != 0);
+			}
+
+			a[numHits] = count; /*record  where c occured */
+			numHits++;
+		}
+
 			count++;
 	}
 
-	return count;
+	/*trim extra space on a*/
+	if (size > numHits)
+		a = realloc(a, sizeof(int) * numHits);
+
+
+	return a;
 
 }
 
 
-int main(int argc char **argv)
+char *
+inputToStr()
+{
+	int count = 0;
+	int c;
+	int size = 1;
+	char *s;
+
+	s = malloc(sizeof(char) * size);
+	assert(s != 0);
+
+	while( (c = getchar()) != EOF)
+	{
+		while(count >= size)
+		{
+			size *= 2;
+			s = realloc(s, sizeof(char) * size);
+			assert( s != 0);
+		}
+
+		s[count] = c;
+		count++;
+	}
+
+	/*trim the extra space*/
+	if(size > count)
+	{
+		s = realloc(s, sizeof(char) * size);
+		assert(s != 0);
+	}
+
+	return s;
+
+}
+
+
+
+
+
+int main(int argc, char **argv)
 {
 	letterCount **letterCount2D;
 	letterCount2D = makeLetterCount2D( (argc - 1) );
 
 	int sLength = 0;
 	int i, j;
-	int c, count;
+	int c;
+	int *locations;
 
-	for(i = 0; i < argc; i++)
+/*	const char *fileText;
+	scanf("")*/
+
+	for(i = 1; i < argc; i++)
 	{
-		sLength = strlen( (argv[i + 1]));
-		letterCount2D[i] = makeLetterCountArr(sLength); /*creates an array of LetterCount structs-- with one for each char in the string*/
+		sLength = strlen( (argv[i]));
+		letterCount2D[i - 1] = makeLetterCountArr(sLength); /*creates an array of LetterCount structs-- with one for each char in the string*/
 
 		for(j = 0; j < sLength; j++)
 		{
-			c = argv[i + 1][j];
-			count = getCount(c);
-			initLetterCount( letterCount2D[i][j], c, count);
+			c = argv[i][j];
+			locations = getLocations(c);
+			initLetterCount( &letterCount2D[i - 1][j], c, locations);
 
 		}
 
@@ -48,8 +121,7 @@ int main(int argc char **argv)
 
 	/*debugging*/
 	if (argc > 1)
-	printf("You entered the first arg: %s \n 
-			The number of %c's in the input is: %d", argv[2], argv[2][0], letterCount2D[0]->count);
+	printf("You entered the first arg: %s \n The first location of %c in the input is: %d\n", argv[1], argv[1][0], letterCount2D[0]->locations[0]);
 
 
 
